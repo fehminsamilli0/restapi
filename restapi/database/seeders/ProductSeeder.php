@@ -15,6 +15,8 @@ class ProductSeeder extends Seeder
      */
     public function run()
     {
+        DB::statement('SET FOREIGN_KEY_CHECKS=0');
+
         DB::table('products')->truncate();
         DB::table('products')->insert([
             'name' =>'Car',
@@ -23,5 +25,6 @@ class ProductSeeder extends Seeder
             'price'=> 19.8
         ]);
         Product::factory(100)->create();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1');
     }
 }
