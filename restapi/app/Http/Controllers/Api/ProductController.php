@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
@@ -13,11 +14,23 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         //return Product::all();
         //return response()->json(Product::all(),200);
-        return response(Product::all(),200);
+        //return response(Product::paginate(10),200);
+        $offset = $request->has('offset') ? $request->query('offset') : 0;
+        $limit = $request->has('limit') ? $request->query('limit') : 10;
+
+        $qb=Product::query();
+        if ($request->has('q'))
+            $qb->where('name','like','%'.$request->query('q').'%');
+        if($request->has('sortBy'))
+            $qb->orderBy($request->query('sortBy'),$request->query('sort','DESC'));
+
+        $data = $qb->offset($offset)->limit($limit)->get();
+        return response($data,200);
+
     }
 
     /**
@@ -34,7 +47,7 @@ class ProductController extends Controller
         $product->description =$request->description;
         $product->price= $request->price;
         $product->save();
-        return ressponse([
+        return response([
             'data'=>$product,
             'message'=>"Succesfully"
         ],200);
@@ -63,7 +76,14 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        //
+        $product->name = $request->name;
+        $product->price=$request->price;
+        $product->save();
+
+        return response([
+            'data'=>$product,
+            'message'=>'Product updated'
+        ],200);
     }
 
     /**
@@ -74,6 +94,9 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        //
+        $product->delete();
+        return response([
+            'message'=>'Product deleted'
+        ],200);
     }
 }
