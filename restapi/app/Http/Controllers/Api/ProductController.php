@@ -22,13 +22,14 @@ class ProductController extends Controller
         $offset = $request->has('offset') ? $request->query('offset') : 0;
         $limit = $request->has('limit') ? $request->query('limit') : 10;
 
-        $qb=Product::query();
+        $qb=Product::query()->with('categories');
         if ($request->has('q'))
             $qb->where('name','like','%'.$request->query('q').'%');
         if($request->has('sortBy'))
             $qb->orderBy($request->query('sortBy'),$request->query('sort','DESC'));
 
         $data = $qb->offset($offset)->limit($limit)->get();
+        $data  = $data->makeHidden('slug');
         return response($data,200);
 
     }
@@ -98,5 +99,27 @@ class ProductController extends Controller
         return response([
             'message'=>'Product deleted'
         ],200);
+    }
+
+    public function custom1(){
+
+        // return Product::select('id','name')->orderBy('created_at','desc')->take(10)->get();
+        return Product::selectRaw('id as product_id , name as product_name ')->orderBy('name','asc')->take(15)->get();
+
+    }
+    public function custom2(){
+
+        $products = Product::orderBy('name','asc')->take(15)->get();
+
+        $mapped =  $products->map(function ($product){
+            return [
+              '_id'=>$product['id'],
+                'product_name'=>$product['name'],
+                'product_price'=>$product['price'] * 1.2
+
+            ];
+        });
+        return $mapped;
+
     }
 }
