@@ -20,6 +20,10 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+Route::get('/custom1',[ProductController::class,'custom1']);
+Route::get('/custom2',[ProductController::class,'custom2']);
+Route::get('/custom3',[CategoryController::class,'custom3']);
+
 
 Route::apiResource('/users',UserController::class);
 Route::apiResource('/products',ProductController::class);

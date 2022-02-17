@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class CategoryController extends Controller
@@ -81,4 +82,15 @@ class CategoryController extends Controller
             'message'=>'Category deleted'
         ],200);
     }
+
+    public function custom3(){
+        return DB::table('product_categories as pc')
+            ->selectRaw('c.name, COUNT(*) as total  ')
+            ->join('categories as c','c.id','=','pc.category_id')
+            ->join('products as p','p.id','=','pc.product_id')
+            ->groupBy('c.name')
+            ->orderByRaw('COUNT(*) DESC')
+            ->get();
+    }
+
 }
