@@ -23,6 +23,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::get('/product/custom1',[ProductController::class,'custom1']);
 Route::get('/product/custom2',[ProductController::class,'custom2']);
 Route::get('/product/custom3',[ProductController::class,'custom3']);
+Route::get('/product/list',[ProductController::class,'listWithCategories']);
 Route::get('/categories/custom3',[CategoryController::class,'custom3']);
 Route::get('/users/custom1',[UserController::class,'custom1']);
 
