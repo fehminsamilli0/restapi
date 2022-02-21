@@ -17,7 +17,8 @@ class ProductWithCategoriesResource extends JsonResource
         return [
             'id'=>$this->id,
             'name'=>$this->name,
-            'categories'=>CategoryResource::collection($this->categories),
+            //'categories'=>CategoryResource::collection($this->categories),
+            'categories'=>CategoryResource::collection($this->whenLoaded('categories')),
             'is_admin'=>$this->when($this->id==1,1)
         ];
     }

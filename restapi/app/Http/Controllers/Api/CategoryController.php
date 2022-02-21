@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
-class CategoryController extends Controller
+class CategoryController extends ApiController
 {
     /**
      * Display a listing of the resource.
@@ -17,7 +17,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        return response(Category::all(),200);
+        return $this->apiResponse(ResultType::Success,Category::all(), 'Categories fetched', 200);
     }
 
     /**
@@ -32,10 +32,7 @@ class CategoryController extends Controller
         $categories->name = $request->name;
         $categories->slug = Str::slug($request->name);
         $categories->save();
-        return response([
-            'data'=>$categories,
-            'message'=>"Category Created"
-        ],200);
+        return $this->apiResponse(ResultType::Success,$categories,"Category Created",200);
     }
 
     /**
@@ -47,7 +44,7 @@ class CategoryController extends Controller
     public function show(Category $category)
     {
         //return $category;
-        return response($category,200);
+        return $this->apiResponse(ResultType::Success,$category,"Category fetched",200);
     }
 
     /**
@@ -63,10 +60,7 @@ class CategoryController extends Controller
         $category->price=$request->price;
         $category->save();
 
-        return response([
-            'data'=>$category,
-            'message'=>'Category updated'
-        ],200);
+        return $this->apiResponse(ResultType::Success,$category,'Category updated',200);
     }
 
     /**
@@ -78,9 +72,7 @@ class CategoryController extends Controller
     public function destroy(Category $category)
     {
         $category->delete();
-        return response([
-            'message'=>'Category deleted'
-        ],200);
+        return $this->apiResponse(ResultType::Success,null,'Category deleted',200);
     }
 
     public function custom3(){

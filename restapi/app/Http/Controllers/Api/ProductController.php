@@ -9,7 +9,7 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
-class ProductController extends Controller
+class ProductController extends ApiController
 {
     /**
      * Display a listing of the resource.
@@ -50,10 +50,7 @@ class ProductController extends Controller
         $product->description =$request->description;
         $product->price= $request->price;
         $product->save();
-        return response([
-            'data'=>$product,
-            'message'=>"Succesfully"
-        ],200);
+        return $this->apiResponse(ResultType::Success,$product,"Succesfully",200);
 
     }
 
@@ -66,7 +63,7 @@ class ProductController extends Controller
     public function show(Product $product)
     {
         //return $product;
-        return response($product,200);
+        return $this->apiResponse(ResultType::Success,$product,'Product fetched',200);
 
     }
 
@@ -83,10 +80,7 @@ class ProductController extends Controller
         $product->price=$request->price;
         $product->save();
 
-        return response([
-            'data'=>$product,
-            'message'=>'Product updated'
-        ],200);
+        return $this->apiResponse(ResultType::Success,$product,'Product updated',200);
     }
 
     /**
@@ -98,9 +92,7 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         $product->delete();
-        return response([
-            'message'=>'Product deleted'
-        ],200);
+        return $this->apiResponse(ResultType::Success,null,'Product deleted',200);
     }
 
     public function custom1(){
@@ -132,7 +124,7 @@ class ProductController extends Controller
 
     public function listWithCategories(){
 
-        $products= Product::paginate(10);
+        $products= Product::with('categories')->paginate(10);
         return ProductWithCategoriesResource::collection($products);
     }
 }
