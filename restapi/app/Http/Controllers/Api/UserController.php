@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UserStoreRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -44,16 +45,16 @@ class UserController extends ApiController
      * @param  \Illuminate\Http\Request  $request
      * @return Response
      */
-    public function store(Request $request)
+    public function store(UserStoreRequest $request)
     {
-        $validator = Validator::make($request->all(),[
-           'name'=>'required|string|max:50',
-            'email'=>'required|email|unique:users',
-            'password'=>'required|min:4'
-        ]);
-
-        if ($validator->fails())
-            return $this->apiResponse(ResultType::Error,$validator->errors(),"Validation fails",400);
+//        $validator = Validator::make($request->all(),[
+//           'name'=>'required|string|max:50',
+//            'email'=>'required|email|unique:users',
+//            'password'=>'required|min:4'
+//        ]);
+//
+//        if ($validator->fails())
+//            return $this->apiResponse(ResultType::Error,$validator->errors(),"Validation fails",400);
 
         $user = new  User();
         $user->name = $request->name;
