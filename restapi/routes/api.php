@@ -20,6 +20,13 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::apiResources([
+    'users' => UserController::class,
+    'products' => ProductController::class,
+    'categories' => CategoryController::class,
+]);
+
 Route::get('/product/custom1',[ProductController::class,'custom1']);
 Route::get('/product/custom2',[ProductController::class,'custom2']);
 Route::get('/product/custom3',[ProductController::class,'custom3']);
@@ -27,11 +34,16 @@ Route::get('/product/list',[ProductController::class,'listWithCategories']);
 Route::get('/categories/custom3',[CategoryController::class,'custom3']);
 Route::get('/users/custom1',[UserController::class,'custom1']);
 
+Route::post('/form/upload',[CategoryController::class,'upload']);
+Route::post('/form/store',[CategoryController::class,'store']);
 
 
-Route::apiResource('/users',UserController::class);
-Route::apiResource('/products',ProductController::class);
-Route::apiResource('/categories',CategoryController::class);
+
+
+
+//Route::apiResource('/users',UserController::class);
+//Route::apiResource('/products',ProductController::class);
+//Route::apiResource('/categories',CategoryController::class);
 
 
 
