@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\Apply;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class ApplyController extends Controller
 {
@@ -125,21 +126,19 @@ class ApplyController extends Controller
             'file'=>'required|mimes:pdf,jpg,jpeg,png|max:3072'
         ]);
 
-
         if ($request->hasFile('file')) {
             $file = $request->file('file')->getClientOriginalName();
-            $path  = '/driver_attaches/';
+            //$path  = '/driver_attaches/';
+
             $name = pathinfo($file, PATHINFO_FILENAME);
             $fileName = Str::slug($name) . '-' . time() . '.' . $request->file->getClientOriginalExtension();
-            $request->file->move(public_path($path), $fileName);
-            $file_url = $path . $fileName;
-            return $file_url;
+            //Upload File to external server
+            Storage::disk('ftp')->put($fileName, fopen($request->file('file'), 'r+'));
+            return response()->json(['file'=>$fileName]);
         }
 
-
-
-
     }
+
 
     public function deleteFile(Request $request)
     {
@@ -147,19 +146,16 @@ class ApplyController extends Controller
             'file'=>'required'
         ]);
 
-        if ($request->file) {
-            $path  = '/driver_attaches/';
-            $file=$request->file;
+        if ($request->file_name) {
 
-            if (\File::exists(public_path($path.$file))) {
-                unlink(public_path($path.$file));
+            Storage::disk('ftp')->delete($request->file);
+
                 return response()->json('Uğurla silindi!',200);
             }else{
                 return response()->json('Xəta baş verdi!',404);
             }
 
 
-        }
     }
 
 }
