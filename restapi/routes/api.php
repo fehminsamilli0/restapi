@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ApplyController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,6 +40,10 @@ Route::post('/form/store',[CategoryController::class,'store']);
 
 
 
+Route::post('/form/store',[ApplyController::class,'store']);
+Route::post('/form/upload',[ApplyController::class,'uploadFile']);
+
+Route::post('/form/delete',[ApplyController::class,'deleteFile']);
 
 
 //Route::apiResource('/users',UserController::class);
